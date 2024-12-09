@@ -1,0 +1,33 @@
+name: Jira Webhook
+
+on:
+  repository_dispatch:
+    types: [jb_test]
+
+env:
+  PLANVIEW: ${{ github.event.client_payload.planview }} # true|false
+  LOB_CAB: ${{ github.event.client_payload.lob_cab }} # string
+  SITES: ${{ github.event.client_payload.sites }} # comma seperated list
+  IP_ADDRESS: ${{ github.event.client_payload.ip_address }} ip/cidr
+  COMMENT: ${{ github.event.client_payload.comment }}
+  CA_ID: 1769792
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run the Job
+      run: |
+        echo PLANVIEW: $PLANVIEW ; LOB_CAB: $LOB_CAB ; SITES: $SITES ; IP_ADDRESS: $IP_ADDRESS ; COMMENT: COMMENT
+        
